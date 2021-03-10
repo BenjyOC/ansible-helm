@@ -1,0 +1,21 @@
+---
+- name: Install bash-completion package
+  apt:
+    name: bash-completion
+
+- name: Extract helm from url
+  ansible.builtin.unarchive:
+    src: "{{ helm_url }}"
+    dest: /tmp
+    remote_src: yes
+
+- name: Copy helm binary to /usr/local/bin/
+  ansible.builtin.copy:
+    src: /tmp/linux-arm64/helm
+    dest: /usr/local/bin/helm
+    remote_src: yes
+
+- name: kubectl completion helm >/etc/bash_completion.d/helm
+  ansible.builtin.shell:
+    cmd: helm completion bash >/etc/bash_completion.d/helm
+    creates: /etc/bash_completion.d/helm
